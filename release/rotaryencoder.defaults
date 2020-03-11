@@ -1,0 +1,11 @@
+# Defaults / Configuration options for rotaryencoder
+#
+#        -d         (run as daemon)
+#        -ms        (MQTT Server:Port)
+#        -mt        (MQTT Topic)
+#        -rc        (Rotaryencoder Clock GPIO pin)
+#        -rd        (Rotaryencoder Data GPIO pin)
+#        -rs        (Rotaryencoder Switch GPIO pin)
+#
+
+OPTS = -d -ms trident:1883 -mt "shairport-sync/study/remote" -rc 22 -rd 27 -rs 17

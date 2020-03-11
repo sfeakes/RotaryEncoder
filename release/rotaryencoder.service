@@ -1,0 +1,20 @@
+
+[Unit]
+Description=RotaryEncoder daemon for shairport-sync
+After=network.target multi-user.target
+Requires=network.target
+
+[Service]
+Type=forking
+#RemainAfterExit=no
+#StartLimitInterval=0
+PIDFile=/run/rotaryencoder.pid 
+EnvironmentFile=/etc/default/rotaryencoder
+ExecStart=/usr/local/bin/rotaryencoder $OPTS
+ExecReload=/bin/kill -HUP $MAINPID
+#Restart=on-failure
+KillMode=process
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
