@@ -33,7 +33,9 @@ sudo ./release/RotaryEncoder -ms 192.168.1.20:1883 -mt "shairport-sync/Living Ro
 
 If that works, install it as a service
 ```
-make install
+sudo make install
+--or--
+sudo ./release/install.sh
 ```
 
 To compile
