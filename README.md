@@ -50,6 +50,31 @@ edit Makefile and command out `ADD_CURL := 1` if not using forked-daapd / curl
 make clean
 make
 ```
+
+# Configuration
+
+edit /etc/default/rotartencoder
+
+Options should be self explnatory, just pick how you want to set volume, either post to shairport-sync using MQTT or forked-daapd using REST API's.  Posting to forked-daapd is a little quicker at the moment, but this only works if you are actually running forked-daapd as you DAAP server.
+
+For shairport-sync you need to enable MQTT and remote with something similar to the below in `/etc/shairport-sync.conf`
+```
+mqtt =
+{
+        enabled = "yes";
+        hostname = "trident";           // Hostname of the MQTT Broker
+        port = 1883;                    // Port on the MQTT Broker to connect to
+        topic = "shairport-sync/study";
+        publish_parsed = "yes";
+        enable_remote = "yes";
+}
+```
+
+If using forked-daapd, just get the ID of the player you're setting the volume on, and use that in rotaryencoder's config.  Hit the below URL for a list of players on your system.
+```
+http://<forked-daapd-server>:<port>/api/outputs
+```
+
 ## 1.1 Release
 * added support to use forked-daapd API's
 
