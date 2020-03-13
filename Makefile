@@ -1,19 +1,16 @@
 # define the C compiler to use
 CC = gcc
 
-#USE_WIRINGPI := 1
+ADD_CURL := 1
 
 #LOG := -D GPIO_LOG_ENABLED -D LOGGING_ENABLED
-#LOG := -D LOGGING_ENABLED
-LOG := 
+LOG := -D LOGGING_ENABLED
+#LOG := 
 #LOG := -D GPIO_ERR_LOG_DISABELED
 
 #SYSFS := -D GPIO_SYSFS_MODE     # Use file system for everything
 #SYSFS := -D GPIO_SYSFS_INTERRUPT # Use filesystem for interrupts
 SYSFS :=
-
-
-LIBS := -lm -lpthread
 
 # debug of not
 #DBG = -g -O0 -fsanitize=address -static-libasan
@@ -21,12 +18,23 @@ LIBS := -lm -lpthread
 #DBG = -D GPIO_DEBUG
 DBG =
 
+ifeq ($(ADD_CURL),)
+  LIBS := -lm -lpthread
+else
+  LIBS := -lm -lpthread -lcurl
+  DAAPD = -D WITH_DAAPD
+endif
+
 # define any compile-time flags
 GCCFLAGS = -Wall -O3
 
 MONGOOSE_CFLAGS = -D MG_ENABLE_MQTT=1 -D MG_ENABLE_MQTT_BROKER=0 -D MG_ENABLE_HTTP=0 -D MG_ENABLE_SSL=0 -D MG_ENABLE_HTTP_WEBSOCKET0 -D MG_ENABLE_DNS_SERVER=0 -D MG_ENABLE_COAP=0 -D MG_ENABLE_BROADCAST=0 -D MG_ENABLE_GETADDRINFO=0 -D MG_ENABLE_THREADS=0 -D MG_DISABLE_HTTP_DIGEST_AUTH -D CS_DISABLE_MD5
+
+# NSF Below is for HTTP, remove if don;t get working
+#MONGOOSE_CFLAGS = -D MG_DISABLE_MD5 -D MG_DISABLE_HTTP_DIGEST_AUTH -D MG_DISABLE_MD5 -D MG_DISABLE_JSON_RPC -D INI_READONLY
+
 # define any compile-time flags
-CFLAGS = -Wall -O3 $(LOG) $(DBG) $(LIBS) $(MONGOOSE_CFLAGS)
+CFLAGS = -Wall -O3 $(LOG) $(DBG) $(LIBS) $(MONGOOSE_CFLAGS) $(DAAPD)
 #CFLAGS = -Wall -O3 $(LOG) $(DBG) $(LIBS)
 
 # add it all together
@@ -34,18 +42,20 @@ CFLAGS = -Wall -O3 $(LOG) $(DBG) $(LIBS) $(MONGOOSE_CFLAGS)
 
 # define the C source files
 SRCS = RotaryEncoder.c GPIO_Pi.c MQTT.c mongoose.c log.c
-#SRCS = RotaryEncoder.c GPIO_Pi.c
 
 OBJS = $(SRCS:.c=.o)
 
 # define the executable file
 MAIN = ./release/rotaryencoder
+#CURL = ./release/rotaryencodercurl
+
+#curl: $(CURL)
 
 all:    $(MAIN) 
   @echo: $(MAIN) have been compiled
 
 $(MAIN): $(OBJS) 
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS) 
 
 install: $(MAIN)
 	./release/install.sh

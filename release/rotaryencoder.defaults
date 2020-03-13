@@ -3,9 +3,15 @@
 #        -d         (run as daemon)
 #        -ms        (MQTT Server:Port)
 #        -mt        (MQTT Topic)
+#        -ds        (DAAPD Server:Port)
+#        -dp        (DAAPD Player ID)
 #        -rc        (Rotaryencoder Clock GPIO pin)
 #        -rd        (Rotaryencoder Data GPIO pin)
 #        -rs        (Rotaryencoder Switch GPIO pin)
 #
 
-OPTS = -d -ms trident:1883 -mt "shairport-sync/study/remote" -rc 22 -rd 27 -rs 17
+# MQTT Settings
+#OPTS = -d -ms trident:1883 -mt "shairport-sync/study/remote" -rc 22 -rd 27 -rs 17
+
+# forked_daapd settings
+OPTS = -d -ds thunderbird3:80 -dp 11259997263078 -rc 22 -rd 27 -rs 17
